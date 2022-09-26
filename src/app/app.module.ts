@@ -6,15 +6,10 @@ import { AppComponent } from './app.component';
 import { CallBasedOnCallComponent } from './call-based-on-call/call-based-on-call.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
-import { CallBasedOnCallChildComponent } from './call-based-on-call/call-based-on-call-child/call-based-on-call-child.component';
 
 @NgModule({
   imports: [AppRoutingModule, BrowserModule, FormsModule, HttpClientModule],
-  declarations: [
-    AppComponent,
-    CallBasedOnCallComponent,
-    CallBasedOnCallChildComponent,
-  ],
+  declarations: [AppComponent, CallBasedOnCallComponent],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

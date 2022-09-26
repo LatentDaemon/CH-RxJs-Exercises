@@ -1,6 +1,7 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { tap, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-call-based-on-call',
@@ -8,27 +9,35 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./call-based-on-call.component.css'],
 })
 export class CallBasedOnCallComponent implements OnInit {
-  rockets: any;
+  rocket: any;
+  baseUrl: string = 'https://api.spacexdata.com/v3/rockets/';
   constructor(
-    private activatedRoute: ActivatedRoute,
+    private route: ActivatedRoute,
     private readonly http: HttpClient
   ) {}
 
   ngOnInit() {
-    console.log('hello');
-    this.getRockets();
+    // this.getRockets();
     this.setupRocketData();
   }
 
   setupRocketData() {
-    this.activatedRoute.params.subscribe((params) => console.log(params['id']));
+    this.route.params
+      .pipe(
+        tap((result) => console.log(result.id)),
+        switchMap((result) => this.http.get(`${this.baseUrl}${result.id}`))
+      )
+      .subscribe((result) => {
+        this.rocket = result;
+        console.log(result);
+      });
   }
 
-  getRockets() {
-    let httpParams = new HttpParams().set('limit', 4).set('offset', 3);
+  // getRockets() {
+  //   let httpParams = new HttpParams().set('limit', 4).set('offset', 3);
 
-    this.http
-      .get('https://api.spacexdata.com/v3/rockets', { params: httpParams })
-      .subscribe((rockets) => console.log(rockets));
-  }
+  //   this.http
+  //     .get(this.baseUrl + 'rockets', { params: httpParams })
+  //     .subscribe((rockets) => console.log(rockets));
+  // }
 }
